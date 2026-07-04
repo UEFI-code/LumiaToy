@@ -26,6 +26,7 @@ EFI_STATUS efi_main(
         SystemTable->ConOut,
         L"Hello\r\n"
     );
+    while (1);
 
     return EFI_SUCCESS;
 }
