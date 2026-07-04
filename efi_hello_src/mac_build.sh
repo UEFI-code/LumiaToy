@@ -1,13 +1,15 @@
 /opt/homebrew/opt/llvm/bin/clang \
-  -target armv7-none-windows \
+  -target armv7-none-windows-msvc \
   -ffreestanding \
+  -fno-pic \
+  -marm \
   -c 1.c \
   -o 1.o
 
-/opt/homebrew/opt/lld/bin/ld.lld \
-  -shared \
-  -m thumb2pe \
-  --subsystem=efi_application \
-  -e efi_main \
-  1.o \
-  -o 1.efi
+/opt/homebrew/opt/lld/bin/lld-link \
+  /subsystem:efi_application \
+  /entry:efi_main \
+  /machine:arm \
+  /base:0x10000000 \
+  /align:4096 \
+  1.o /out:1.efi
