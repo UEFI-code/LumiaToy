@@ -1,5 +1,5 @@
 /opt/homebrew/opt/llvm/bin/clang \
-  -target armv7-none-windows-msvc \
+  -target armv7-none-eabi \
   -ffreestanding \
   -fno-pic \
   -marm \
