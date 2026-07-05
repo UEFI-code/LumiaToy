@@ -17,14 +17,18 @@ typedef struct {
     SIMPLE_TEXT_OUTPUT_PROTOCOL *ConOut;
 } EFI_SYSTEM_TABLE;
 
-EFI_STATUS efi_main(
+static CHAR16 msg[] = {
+    'H','e','l','l','o','\r','\n',0
+};
+
+__attribute__((used)) EFI_STATUS efi_main(
     EFI_HANDLE ImageHandle,
     EFI_SYSTEM_TABLE *SystemTable
 )
 {
     SystemTable->ConOut->OutputString(
         SystemTable->ConOut,
-        L"Hello\r\n"
+        msg
     );
     while (1);
 
