@@ -1,7 +1,13 @@
+export MODULE_PATH=$(pwd)
+export GCC5_ARM_PREFIX=arm-linux-gnueabi-
+
 rm -rf MyApp
-cp ArmVirtQemu.dsc ~/edk2_arm32/ArmVirtPkg/
+cp MdeModulePkg.dsc ~/edk2_arm32/MdeModulePkg/MdeModulePkg.dsc
 
 cd ~/edk2_arm32
 source edksetup.sh
-export GCC5_ARM_PREFIX=arm-linux-gnueabi-
-build -a ARM -t GCC5 -p ArmVirtPkg/ArmVirtQemu.dsc
+build \
+    -a ARM \
+    -p MdeModulePkg/MdeModulePkg.dsc \
+    -m $MODULE_PATH/MyApp.inf \
+    -t GCC5
