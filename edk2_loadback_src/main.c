@@ -24,17 +24,18 @@ UefiMain (
         NULL,
         EFI_OPEN_PROTOCOL_GET_PROTOCOL
     );
-
     if (EFI_ERROR(Status)) {
         Print(L"OpenProtocol failed: %r\n", Status);
+        gBS->Stall(2 * 1000 * 1000);
         return Status;
     }
+    Print(L"CurrentLoadedImage->DeviceHandle: %p\n", CurrentLoadedImage->DeviceHandle);
+    gBS->Stall(2 * 1000 * 1000);
 
     EFI_DEVICE_PATH_PROTOCOL *TargetDevicePath = FileDevicePath(
         CurrentLoadedImage->DeviceHandle,
         L"\\EFI\\BOOT\\orig_bootarm.efi"
     );
-
     if (TargetDevicePath == NULL) {
         Print(L"FileDevicePath failed\n");
         gBS->Stall(2 * 1000 * 1000);
@@ -52,7 +53,6 @@ UefiMain (
         0,
         &NewImageHandle
     );
-
     if (EFI_ERROR(Status)) {
         Print(L"LoadImage failed: %r\n", Status);
         gBS->Stall(2 * 1000 * 1000);
@@ -66,11 +66,13 @@ UefiMain (
         NULL,
         NULL
     );
-
     if (EFI_ERROR(Status)) {
         Print(L"StartImage failed: %r\n", Status);
         gBS->Stall(2 * 1000 * 1000);
+        return Status;
     }
 
+    Print(L"Target image returned: %r\n", Status);
+    gBS->Stall(2 * 1000 * 1000);
     return Status;
 }
