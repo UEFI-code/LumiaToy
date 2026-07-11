@@ -13,7 +13,7 @@ UefiMain (
 )
 {
     Print(L"Hello ARM UEFI!\n");
-    gBS->Stall(10 * 1000 * 1000);
+    gBS->Stall(5 * 1000 * 1000);
 
     EFI_LOADED_IMAGE_PROTOCOL *CurrentLoadedImage;
     EFI_STATUS Status = gBS->OpenProtocol(
@@ -37,9 +37,11 @@ UefiMain (
 
     if (TargetDevicePath == NULL) {
         Print(L"FileDevicePath failed\n");
+        gBS->Stall(2 * 1000 * 1000);
         return EFI_OUT_OF_RESOURCES;
     }
     Print(L"TargetDevicePath: %s\n", ConvertDevicePathToText(TargetDevicePath, TRUE, TRUE));
+    gBS->Stall(2 * 1000 * 1000);
 
     EFI_HANDLE NewImageHandle;
     Status = gBS->LoadImage(
@@ -53,8 +55,11 @@ UefiMain (
 
     if (EFI_ERROR(Status)) {
         Print(L"LoadImage failed: %r\n", Status);
+        gBS->Stall(2 * 1000 * 1000);
         return Status;
     }
+    Print(L"NewImageHandle: %p\n", NewImageHandle);
+    gBS->Stall(2 * 1000 * 1000);
 
     Status = gBS->StartImage(
         NewImageHandle,
@@ -64,6 +69,7 @@ UefiMain (
 
     if (EFI_ERROR(Status)) {
         Print(L"StartImage failed: %r\n", Status);
+        gBS->Stall(2 * 1000 * 1000);
     }
 
     return Status;
