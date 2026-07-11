@@ -36,11 +36,6 @@ UefiMain (
         CurrentLoadedImage->DeviceHandle,
         L"\\EFI\\BOOT\\orig_bootarm.efi"
     );
-    if (TargetDevicePath == NULL) {
-        Print(L"FileDevicePath failed\n");
-        gBS->Stall(2 * 1000 * 1000);
-        return EFI_OUT_OF_RESOURCES;
-    }
     Print(L"TargetDevicePath: %s\n", ConvertDevicePathToText(TargetDevicePath, TRUE, TRUE));
     gBS->Stall(2 * 1000 * 1000);
 
