@@ -9,5 +9,6 @@ UefiMain (
 )
 {
     Print(L"Hello ARM UEFI!\n");
+    while (1);
     return EFI_SUCCESS;
 }
