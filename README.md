@@ -65,6 +65,8 @@ See `Models/Lumia/UEFI/BootMgr/LumiaBootManagerAppModel.cs` for details.
 
 After unlocking the bootloader, the phone is likely a normal UEFI PC, u can write UEFI apps and run them.
 
+![Lumia 920 Hello](920_hello.png)
+
 ### Install `EDK2` for ARM32
 
 chk `config_edk2_arm32.sh` for details.
