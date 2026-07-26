@@ -32,6 +32,7 @@ UefiMain (
     UINT32 Width  = Gop->Mode->Info->HorizontalResolution;
     UINT32 Height = Gop->Mode->Info->VerticalResolution;
     Print(L"Screen Resolution: %ux%u\n", Width, Height);
+    Print(L"Pixel Format: %d\n", Gop->Mode->Info->PixelFormat);
 
     EFI_PHYSICAL_ADDRESS FrameBufferBase = Gop->Mode->FrameBufferBase;
     UINTN FrameBufferSize = Gop->Mode->FrameBufferSize;
