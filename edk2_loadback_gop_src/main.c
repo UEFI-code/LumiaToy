@@ -14,11 +14,60 @@ UefiMain (
 )
 {
     Print(L"Hello ARM UEFI!\n");
+    // get memory map
+    EFI_MEMORY_DESCRIPTOR *MemoryMap = NULL;
+    UINTN MemoryMapSize = 0;
+    UINTN MapKey;
+    UINTN DescriptorSize;
+    UINT32 DescriptorVersion;
+    EFI_STATUS Status = gBS->GetMemoryMap(
+        &MemoryMapSize,
+        MemoryMap,
+        &MapKey,
+        &DescriptorSize,
+        &DescriptorVersion
+    );
+    if (Status != EFI_BUFFER_TOO_SMALL) {
+        Print(L"GetMemoryMap failed: %r\n", Status);
+        gBS->Stall(2 * 1000 * 1000);
+        goto gop;
+    }
+    MemoryMapSize += DescriptorSize * 8;
+    gBS->AllocatePool(
+        EfiLoaderData,
+        MemoryMapSize,
+        (VOID **)&MemoryMap
+    );
+    Status = gBS->GetMemoryMap(
+        &MemoryMapSize,
+        MemoryMap,
+        &MapKey,
+        &DescriptorSize,
+        &DescriptorVersion
+    );
+    if (EFI_ERROR(Status)) {
+        Print(L"GetMemoryMap failed: %r\n", Status);
+        gBS->Stall(2 * 1000 * 1000);
+        goto gop;
+    }
+    for (UINTN Offset = 0; Offset < MemoryMapSize; Offset += DescriptorSize)
+    {
+        EFI_MEMORY_DESCRIPTOR *Descriptor = (EFI_MEMORY_DESCRIPTOR *)((UINT8 *)MemoryMap + Offset);
+        Print(
+            L"Type: %d, PhysicalStart: 0x%lx, NumberOfPages: %lu, Attribute: 0x%lx\n",
+            Descriptor->Type,
+            Descriptor->PhysicalStart,
+            Descriptor->NumberOfPages,
+            Descriptor->Attribute
+        );
+    }
     gBS->Stall(5 * 1000 * 1000);
 
     // try the GOP
+    gop:
+
     EFI_GRAPHICS_OUTPUT_PROTOCOL *Gop;
-    EFI_STATUS Status = gBS->LocateProtocol(
+    Status = gBS->LocateProtocol(
         &gEfiGraphicsOutputProtocolGuid,
         NULL,
         (VOID **)&Gop
