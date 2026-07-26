@@ -53,13 +53,19 @@ UefiMain (
     for (UINTN Offset = 0; Offset < MemoryMapSize; Offset += DescriptorSize)
     {
         EFI_MEMORY_DESCRIPTOR *Descriptor = (EFI_MEMORY_DESCRIPTOR *)((UINT8 *)MemoryMap + Offset);
-        Print(
-            L"Type: %d, PhysicalStart: 0x%lx, NumberOfPages: %lu, Attribute: 0x%lx\n",
-            Descriptor->Type,
-            Descriptor->PhysicalStart,
-            Descriptor->NumberOfPages,
-            Descriptor->Attribute
-        );
+        switch (Descriptor->Type) {
+            case EfiConventionalMemory:
+                Print(L"Conventional Memory: 0x%lx - 0x%lx\n", Descriptor->PhysicalStart, Descriptor->PhysicalStart + (Descriptor->NumberOfPages * 4096));
+                break;
+            case EfiMemoryMappedIO:
+                Print(L"Memory Mapped IO: 0x%lx - 0x%lx\n", Descriptor->PhysicalStart, Descriptor->PhysicalStart + (Descriptor->NumberOfPages * 4096));
+                break;
+            case EfiMemoryMappedIOPortSpace:
+                Print(L"Memory Mapped IO Port Space: 0x%lx - 0x%lx\n", Descriptor->PhysicalStart, Descriptor->PhysicalStart + (Descriptor->NumberOfPages * 4096));
+                break;
+            default:
+                break;
+        }
     }
     gBS->Stall(5 * 1000 * 1000);
 
