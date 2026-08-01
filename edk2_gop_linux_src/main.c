@@ -221,10 +221,10 @@ UefiMain (
     Print(L"EFI DTB table installed\n");
     gBS->Stall(2 * 1000 * 1000);
 
-    // start the linux_arm.efi
+    // start the linux_arm.efistub
     EFI_DEVICE_PATH_PROTOCOL *KernelDevicePath = FileDevicePath(
         CurrentLoadedImage->DeviceHandle,
-        L"\\EFI\\BOOT\\linux_arm.efi"
+        L"\\EFI\\BOOT\\linux_arm.efistub"
     );
     Print(L"KernelDevicePath: %s\n", ConvertDevicePathToText(KernelDevicePath, TRUE, TRUE));
     gBS->Stall(2 * 1000 * 1000);
