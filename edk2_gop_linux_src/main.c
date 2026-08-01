@@ -206,7 +206,7 @@ UefiMain (
         gBS->Stall(2 * 1000 * 1000);
         return Status;
     }
-    Print(L"DTB loaded: %lu bytes @ %p\n", DtbSize, DtbBuffer);
+    Print(L"DTB loaded: %u bytes @ %p\n", DtbSize, DtbBuffer);
     gBS->Stall(2 * 1000 * 1000);
 
     Status = gBS->InstallConfigurationTable(
