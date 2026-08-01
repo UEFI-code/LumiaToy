@@ -238,6 +238,23 @@ UefiMain (
     Print(L"NewImageHandle: %p\n", NewImageHandle);
     gBS->Stall(2 * 1000 * 1000);
 
+    EFI_LOADED_IMAGE_PROTOCOL *KernelLoadedImage;
+    Status = gBS->OpenProtocol(
+        NewImageHandle,
+        &gEfiLoadedImageProtocolGuid,
+        (VOID **)&KernelLoadedImage,
+        ImageHandle,
+        NULL,
+        EFI_OPEN_PROTOCOL_GET_PROTOCOL
+    );
+    if (EFI_ERROR(Status)) {
+        Print(L"OpenProtocol(KernelLoadedImage) failed: %r\n", Status);
+        gBS->Stall(2 * 1000 * 1000);
+        return Status;
+    }
+    KernelLoadedImage->LoadOptions = L"efi=novamap earlyprintk console=tty0 ignore_loglevel";
+    KernelLoadedImage->LoadOptionsSize = StrSize(KernelLoadedImage->LoadOptions);
+
     Status = gBS->StartImage(
         NewImageHandle,
         NULL,
