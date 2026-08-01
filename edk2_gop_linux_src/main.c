@@ -113,25 +113,17 @@ UefiMain (
     Print(L"Screen Resolution: %ux%u\n", Width, Height);
     Print(L"Pixel Format: %d\n", Gop->Mode->Info->PixelFormat);
 
-    EFI_PHYSICAL_ADDRESS FrameBufferBase = Gop->Mode->FrameBufferBase;
+    UINT32* FrameBufferBase = (UINT32*)(UINTN)Gop->Mode->FrameBufferBase;
     UINTN FrameBufferSize = Gop->Mode->FrameBufferSize;
-    Print(L"FB Base : 0x%lx\n", FrameBufferBase);
-    Print(L"FB Size : %lu bytes\n", FrameBufferSize);
+    Print(L"FB Base : 0x%x\n", FrameBufferBase);
+    Print(L"FB Size : %u bytes\n", FrameBufferSize);
 
-    EFI_GRAPHICS_OUTPUT_BLT_PIXEL Purple = {
-        .Blue = 255,
-        .Green = 0,
-        .Red = 255,
-        .Reserved = 0
-    };
-    Gop->Blt(
-        Gop,
-        &Purple,
-        EfiBltVideoFill,
-        0, 0, Width/2, Height/2,
-        200, 200,
-        0
-    );
+    UINT32 Purple = 0x00FF00FF;
+    for (UINT32 Y = Height / 2; Y < (Height / 2) + 200; Y++) {
+        for (UINT32 X = Width / 2; X < (Width / 2) + 200; X++) {
+            FrameBufferBase[Y * Width + X] = Purple;
+        }
+    }
 
     // load lumia920.dtb
     EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *SimpleFs;
