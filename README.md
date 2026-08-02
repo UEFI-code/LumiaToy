@@ -93,7 +93,7 @@ Framebuf (GOP format = 1):
 
 - 0x80400000 - 0x807C0000
 
-![Lumia 920 Hello](920_hello.png)
+<img src="920_hello.png" alt="Lumia 920 Hello" width="300">
 
 ## Play Linux 6.6
 
@@ -102,7 +102,7 @@ Check the following:
 - Loader: `edk2_gop_linux_src/main.c`
 - Kernel src: `https://github.com/UEFI-code/linux-6.6-lumia920`
 
-![Lumia 920 Linux](920_linux.jpg)
+<img src="920_linux.jpg" alt="Lumia 920 Linux" width="300">
 
 ### Install `EDK2` for ARM32
 
