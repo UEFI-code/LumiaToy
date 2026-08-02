@@ -61,7 +61,7 @@ Here's the brief steps:
 
 See `Models/Lumia/UEFI/BootMgr/LumiaBootManagerAppModel.cs` for details.
 
-## Play
+## Play Baremetal
 
 After unlocking the bootloader, the phone is likely a normal UEFI PC, u can write UEFI apps and run them.
 
@@ -94,6 +94,15 @@ Framebuf (GOP format = 1):
 - 0x80400000 - 0x807C0000
 
 ![Lumia 920 Hello](920_hello.png)
+
+## Play Linux 6.6
+
+Check the following:
+
+- Loader: `edk2_gop_linux_src/main.c`
+- Kernel src: `https://github.com/UEFI-code/linux-6.6-lumia920`
+
+![Lumia 920 Linux](920_linux.jpg)
 
 ### Install `EDK2` for ARM32
 
