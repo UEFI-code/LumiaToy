@@ -91,7 +91,7 @@ UefiMain (
                 break;
         }
     }
-    gBS->Stall(5 * 1000 * 1000);
+    //gBS->Stall(5 * 1000 * 1000);
 
     // try the GOP
     gop:
@@ -199,7 +199,7 @@ UefiMain (
         return Status;
     }
     Print(L"DTB loaded: %u bytes @ %p\n", DtbSize, DtbBuffer);
-    gBS->Stall(2 * 1000 * 1000);
+    //gBS->Stall(2 * 1000 * 1000);
 
     Status = gBS->InstallConfigurationTable(
         &mFdtTableGuid,
@@ -211,7 +211,7 @@ UefiMain (
         return Status;
     }
     Print(L"EFI DTB table installed\n");
-    gBS->Stall(2 * 1000 * 1000);
+    //gBS->Stall(2 * 1000 * 1000);
 
     // start the linux_arm.efistub
     EFI_DEVICE_PATH_PROTOCOL *KernelDevicePath = FileDevicePath(
@@ -219,7 +219,7 @@ UefiMain (
         L"\\EFI\\BOOT\\linux_arm.efistub"
     );
     Print(L"KernelDevicePath: %s\n", ConvertDevicePathToText(KernelDevicePath, TRUE, TRUE));
-    gBS->Stall(2 * 1000 * 1000);
+    //gBS->Stall(2 * 1000 * 1000);
 
     EFI_HANDLE NewImageHandle;
     Status = gBS->LoadImage(
@@ -252,7 +252,7 @@ UefiMain (
         gBS->Stall(2 * 1000 * 1000);
         return Status;
     }
-    KernelLoadedImage->LoadOptions = L"efi=novamap efi=noruntime ignore_loglevel";
+    KernelLoadedImage->LoadOptions = L"efi=novamap efi=noruntime ignore_loglevel initrd=\\EFI\\BOOT\\initramfs.cpio.gz";
     KernelLoadedImage->LoadOptionsSize = StrSize(KernelLoadedImage->LoadOptions);
 
     Status = gBS->StartImage(
