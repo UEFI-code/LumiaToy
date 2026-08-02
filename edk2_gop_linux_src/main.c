@@ -252,7 +252,7 @@ UefiMain (
         gBS->Stall(2 * 1000 * 1000);
         return Status;
     }
-    KernelLoadedImage->LoadOptions = L"efi=novamap ignore_loglevel";
+    KernelLoadedImage->LoadOptions = L"efi=novamap efi=noruntime ignore_loglevel";
     KernelLoadedImage->LoadOptionsSize = StrSize(KernelLoadedImage->LoadOptions);
 
     Status = gBS->StartImage(
