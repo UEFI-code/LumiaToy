@@ -3,3 +3,4 @@
 *.mbn
 *.o
 *.efi
+initramfs_root/*
