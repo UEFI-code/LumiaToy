@@ -252,7 +252,7 @@ UefiMain (
         gBS->Stall(2 * 1000 * 1000);
         return Status;
     }
-    KernelLoadedImage->LoadOptions = L"efi=novamap efi=noruntime ignore_loglevel retain_initrd initrd=\\EFI\\BOOT\\initramfs.cpio.gz";
+    KernelLoadedImage->LoadOptions = L"efi=novamap efi=noruntime ignore_loglevel clk_ignore_unused retain_initrd initrd=\\EFI\\BOOT\\initramfs.cpio.gz";
     KernelLoadedImage->LoadOptionsSize = StrSize(KernelLoadedImage->LoadOptions);
 
     Status = gBS->StartImage(
