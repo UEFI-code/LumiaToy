@@ -8,6 +8,7 @@
 #include <Protocol/GraphicsOutput.h>
 #include <Protocol/SimpleFileSystem.h>
 #include <Guid/FileInfo.h>
+#include "efi_batt_protocol.h"
 
 STATIC EFI_GUID mFdtTableGuid = { 
     0xb1b621d5, 0xf19c, 0x41a5,
@@ -124,6 +125,74 @@ UefiMain (
             FrameBufferBase[Y * Width + X] = Purple;
         }
     }
+
+    // enable battery charging
+    EFI_BATTERY_CHARGING_PROTOCOL *BatteryCharging;
+    Status = gBS->LocateProtocol(
+        &gEfiBatteryChargingProtocolGuid,
+        NULL,
+        (VOID **)&BatteryCharging
+    );
+    if (EFI_ERROR(Status)) {
+        Print(L"BatteryCharging protocol not found: %r\n", Status);
+        goto load_linux;
+    }
+    Print(L"BatteryCharging revision: 0x%x\n", BatteryCharging->Revision);
+    UINT32 StateOfCharge = 0;
+    UINT32 RatedCapacity = 0;
+    INT32 ChargeCurrent = 0;
+    BatteryCharging->GetBatteryStatus(
+        BatteryCharging,
+        &StateOfCharge,
+        &RatedCapacity,
+        &ChargeCurrent
+    );
+    Print(
+        L"Battery: %u%% Capacity=%u mAh Current=%d mA\n",
+        StateOfCharge,
+        RatedCapacity,
+        ChargeCurrent
+    );
+    // if (BatteryCharging->GetBatteryInformation != NULL) {
+    //     UINT32 BatteryVoltage = 0;
+    //     INT32 BatteryTemperature = 0;
+    //     UINT32 UsbVoltage = 0;
+    //     UINT32 UsbCurrent = 0;
+    //     INT32 CurrentIntoBattery = 0;
+    //     Status = BatteryCharging->GetBatteryInformation(
+    //         BatteryCharging,
+    //         &StateOfCharge,
+    //         &CurrentIntoBattery,
+    //         &BatteryVoltage,
+    //         &BatteryTemperature,
+    //         &UsbVoltage,
+    //         &UsbCurrent
+    //     );
+    //     Print(
+    //         L"VBAT=%u mV IBAT=%d mA TEMP=%d USB=%u mV %u mA\n",
+    //         BatteryVoltage,
+    //         CurrentIntoBattery,
+    //         BatteryTemperature,
+    //         UsbVoltage,
+    //         UsbCurrent
+    //     );
+    // }
+    EFI_BATTERY_CHARGING_COMPLETION_TOKEN CompletionToken;
+    CompletionToken.Event = NULL;
+    CompletionToken.Status = EFI_NOT_READY;
+    Status = BatteryCharging->ChargeBattery(
+        BatteryCharging,
+        1500,
+        100,
+        &CompletionToken
+    );
+    if (EFI_ERROR(Status)) {
+        Print(L"ChargeBattery failed: %r\n", Status);
+    } else {
+        Print(L"Charging started: %r\n", CompletionToken.Status);
+    }
+    
+    load_linux:
 
     // load lumia920.dtb
     EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *SimpleFs;
