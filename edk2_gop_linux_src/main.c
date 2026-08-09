@@ -1,6 +1,7 @@
 #include <Uefi.h>
 #include <Library/UefiLib.h>
 #include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiRuntimeServicesTableLib.h>
 #include <Library/UefiApplicationEntryPoint.h>
 #include <Library/DevicePathLib.h>
 #include <Library/BaseMemoryLib.h>
@@ -186,10 +187,12 @@ UefiMain (
         100,
         &CompletionToken
     );
-    if (EFI_ERROR(Status)) {
-        Print(L"ChargeBattery failed: %r\n", Status);
-    } else {
-        Print(L"Charging started: %r\n", CompletionToken.Status);
+    Print(L"Charging started: %r\n", CompletionToken.Status);
+    if (CompletionToken.Status == 0xB)
+    {
+        Print(L"No USB charger detected, failback to shutdown\n");
+        gBS->Stall(2 * 1000 * 1000);
+        gRT->ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, NULL);
     }
     
     load_linux:
