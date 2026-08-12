@@ -100,7 +100,7 @@ Framebuf (GOP format = 1):
 Check the following:
 
 - Loader: `edk2_gop_linux_src/main.c`
-- Kernel src: `https://github.com/UEFI-code/linux-6.6-lumia920`
+- Kernel src: [https://github.com/UEFI-code/linux-6.6-lumia920](https://github.com/UEFI-code/linux-6.6-lumia920)
 
 <img src="920_linux.jpg" alt="Lumia 920 Linux" width="300">
 
